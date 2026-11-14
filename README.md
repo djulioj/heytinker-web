@@ -2,29 +2,40 @@
 
 Website for **Tinker**, a custom 3D printing studio in Barranquilla, Colombia.
 
-A static site: plain HTML, CSS and JavaScript, no tracking and no third-party requests. The only build step bundles the 3D studio (three.js) into `js/studio.min.js`, which is committed, so hosting needs no build.
+A static site: plain HTML, CSS and JavaScript, no tracking and no third-party requests. The only build steps bundle the 3D studio (three.js) into `js/studio.min.js` and render the catalog images; both outputs are committed, so hosting needs no build.
 
 ## Features
 
-- **3D studio** (three.js, lazy-loaded): rotatable previews for name keychains, Christmas ornaments, desk signs and cake toppers; logo keychains (image background removal, k-means color reduction snapped to stocked filaments, multicolor relief); and photo lithophanes with a light on/off simulation. Images are processed in the browser and never uploaded.
+- **3D studio** (three.js, lazy-loaded): rotatable previews for name keychains, Christmas ornaments, desk signs and cake toppers; logo keychains (background removal, k-means color reduction snapped to stocked filaments, multicolor relief); photo lithophanes with a light on/off simulation; and photo relief plaques. Images are processed in the browser and never uploaded.
+- **Realistic rendering**: PLA material with faint 0.2 mm layer lines, image-based lighting generated in the browser (no HDR files), soft shadows, neutral tone mapping and an eased camera intro.
+- **Scenes and export**: each piece can be shown in the studio, on a desk or inside the black gift box, and saved as a share-ready PNG.
 - **Pre-filled WhatsApp orders** with product, text, colors, quantity and estimated total.
+- **Catalog** rendered from a single data file, illustrated with our own 3D renders until real photos exist.
 - **Seasonal mode** (`season` in `js/config.js`): Christmas adds a Santa hat to the logo and an edition badge. Styles live in `css/season.css`.
-- **Subtle scroll reveals** that respect `prefers-reduced-motion`.
-- **Catalog** rendered from a single data file.
+- **Motion** that respects `prefers-reduced-motion`: scroll reveals and a pinned "Cómo pedir" scene that falls back to a plain list.
 - **Liquid-glass UI** in the brand palette (matte black, bone, one orange accent), responsive and mobile-first.
 
 ## Project structure
 
 ```
-index.html        Page markup
-css/styles.css    Styles and self-hosted @font-face rules
-js/config.js      Business data: WhatsApp number, colors, products, prices
-js/app.js         Catalog, WhatsApp links, season, scroll reveals, lazy studio loader
-src/studio.js     3D studio source (bundled to js/studio.min.js)
-css/season.css    Seasonal decorations
-assets/           Logo, icons, fonts (SIL OFL licenses included)
-_headers          Security headers for Cloudflare Pages / Netlify
-vercel.json       Security headers for Vercel
+index.html          Page markup
+css/styles.css      Styles and self-hosted @font-face rules
+css/season.css      Seasonal decorations
+js/config.js        Business data: WhatsApp number, filament colors, products, prices, catalog
+js/app.js           Catalog, WhatsApp links, season, scroll scene and reveals, lazy studio loader
+js/studio.min.js    Bundled 3D studio (generated, committed)
+src/studio.js       Studio UI and state
+src/core.js         Renderer, lighting, camera and the studio / desk / gift-box scenes
+src/materials.js    PLA and metal materials
+src/pieces.js       Geometry for the customizable pieces
+src/imaging.js      Local image processing (logo, lithophane, relief)
+src/concepts.js     Concept models for catalog renders (build-time only)
+tools/              Catalog render script (build-time only)
+docs/               Cost sheet, licenses and the AI proposal (not deployed)
+assets/             Logo, icons, fonts (SIL OFL licenses included), catalog renders
+_headers            Security headers for Cloudflare Pages / Netlify
+vercel.json         Security headers for Vercel
+.vercelignore       Keeps src/, tools/ and docs/ out of the deployed site
 ```
 
 ## Editing content
@@ -32,13 +43,41 @@ vercel.json       Security headers for Vercel
 Everything business-related lives in `js/config.js`:
 
 - `whatsapp`: international format, digits only (e.g. `573001234567`). WhatsApp buttons stay inactive until this is set.
-- `colors`: filament colors offered in the configurator.
+- `colors`: the filament colors in stock. The studio swatches and the logo color matching both read this list, so adding or retiring a spool is a one-line change.
 - `configurable`: products with live preview, max characters and price tiers by quantity.
-- `catalog`: product cards (name, starting price, optional tag, optional `configId` to open the configurator).
+- `catalog`: product cards (id, name, starting price, optional tag, optional `configId` to open the studio).
+
+### Replacing a catalog render with a real photo
+
+Each catalog item has two fields for this:
+
+```js
+{ id: "maceta", name: "Maceta mini con nombre", price: 30000, desc: "...", photo: null, isConcept: true }
+```
+
+1. Save the photo in `assets/catalog/`, ideally 800 x 600 (4:3) as WebP or JPG, under 100 KB.
+2. Set `photo` to its path, for example `photo: "/assets/catalog/maceta-real.webp"`.
+3. Set `isConcept: false`. The "Diseño de referencia" label disappears.
+
+No code changes are needed. While `photo` is `null`, the card shows `assets/catalog/<id>.webp`, the render generated by `npm run render`.
+
+Estimated weight, print time, cost and license for every item are in `docs/catalog-costs.md`. They are kept out of `config.js` on purpose: that file is public.
+
+## Regenerating the catalog renders
+
+The catalog, hero and social images are rendered by the studio's own renderer in headless Chrome:
+
+```bash
+pip install playwright pillow && playwright install chromium   # once
+npm run render                # everything
+npm run render -- llavero    # only the named items
+```
+
+To add an item: add it to `catalog` in `js/config.js`, add a model with the same id in `src/concepts.js`, and run `npm run render`.
 
 ## Rebuilding the 3D studio
 
-After editing `src/studio.js`:
+After editing anything in `src/`:
 
 ```bash
 npm install
