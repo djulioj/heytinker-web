@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tinker · Impresión 3D personalizada en Barranquilla</title>
+  <meta name="description" content="Regalos y piezas impresas en 3D con tu nombre, logo o idea. Hecho en Barranquilla, envíos a toda Colombia.">
+  <meta name="theme-color" content="#0B0B0C">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:title" content="Tinker · Impresión 3D personalizada">
+  <meta property="og:description" content="Si lo imaginas, lo imprimimos en 3D. Regalos personalizados desde Barranquilla.">
+  <meta property="og:image" content="/assets/avatar.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <div class="ambient" aria-hidden="true">
+    <span class="drop drop-a"></span>
+    <span class="drop drop-b"></span>
+    <span class="drop drop-c"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="glass header-bar">
+      <a href="#top" class="brand" aria-label="Tinker, inicio">
+        <img src="/assets/logo.svg" alt="tinker" width="96" height="26">
+      </a>
+      <nav aria-label="Principal" class="nav">
+        <a href="#configura">Diseña</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#como-pedir">Cómo pedir</a>
+        <a href="#faq">Preguntas</a>
+      </nav>
+      <a class="btn btn-primary btn-sm wa-link" data-wa-msg="Hola Tinker, quiero cotizar una idea." href="#" rel="noopener noreferrer" target="_blank">Cotizar</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="top" class="hero">
+      <div class="wrap hero-inner">
+        <p class="pill glass"><span class="live-dot" aria-hidden="true"></span>Pedidos abiertos hasta el <strong data-cutoff>15 de diciembre</strong></p>
+        <h1>Si lo imaginas,<br>lo imprimimos en 3D<span class="accent">_</span></h1>
+        <p class="lead">Regalos y piezas únicas con tu nombre, logo o idea. Diseñadas a tu medida, impresas capa por capa en Barranquilla.</p>
+        <div class="hero-actions">
+          <a href="#configura" class="btn btn-primary">Diseña el tuyo</a>
+          <a href="#catalogo" class="btn btn-glass">Ver catálogo</a>
+        </div>
+        <ul class="facts" aria-label="Por qué Tinker">
+          <li><strong>Multicolor</strong><span>hasta 4 colores por pieza</span></li>
+          <li><strong>A tu medida</strong><span>nombres, logos, fotos</span></li>
+          <li><strong>Toda Colombia</strong><span>envíos nacionales</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="configura" class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Configurador</p>
+          <h2>Míralo antes de pedirlo.</h2>
+          <p class="sub">Escribe el nombre, elige colores y envíanos el pedido listo por WhatsApp.</p>
+        </header>
+
+        <div class="config">
+          <div class="preview-card glass">
+            <div class="preview-stage" id="preview" role="img" aria-label="Vista previa del producto"></div>
+            <p class="fine">Vista previa aproximada. Te confirmamos el diseño final antes de imprimir.</p>
+          </div>
+
+          <form class="config-form glass" id="config-form" novalidate>
+            <fieldset>
+              <legend>Producto</legend>
+              <div class="segmented" id="product-chips"></div>
+            </fieldset>
+
+            <div class="field">
+              <label for="cfg-text">Texto <span class="count" id="cfg-count"></span></label>
+              <input id="cfg-text" name="text" type="text" autocomplete="off" spellcheck="false" maxlength="16">
+            </div>
+
+            <div class="field" id="subline-field" hidden>
+              <label for="cfg-sub">Segunda línea</label>
+              <input id="cfg-sub" name="subline" type="text" autocomplete="off" spellcheck="false" maxlength="24">
+            </div>
+
+            <fieldset>
+              <legend>Base · <span id="base-name"></span></legend>
+              <div class="swatches" id="base-swatches"></div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Texto · <span id="text-name"></span></legend>
+              <div class="swatches" id="text-swatches"></div>
+              <p class="warn" id="contrast-warn" hidden>Elige colores distintos para que el texto se lea.</p>
+            </fieldset>
+
+            <div class="field">
+              <label for="cfg-qty">Cantidad</label>
+              <div class="stepper">
+                <button type="button" id="qty-minus" aria-label="Quitar una unidad">−</button>
+                <input id="cfg-qty" name="qty" type="number" min="1" max="200" value="1" inputmode="numeric">
+                <button type="button" id="qty-plus" aria-label="Agregar una unidad">+</button>
+              </div>
+            </div>
+
+            <div class="total" aria-live="polite">
+              <p class="total-label">Total estimado</p>
+              <p class="total-value" id="cfg-total">$0</p>
+              <p class="fine" id="cfg-unit"></p>
+              <p class="fine" id="cfg-note"></p>
+            </div>
+
+            <a class="btn btn-primary btn-block" id="cfg-send" href="#" rel="noopener noreferrer" target="_blank">Pedir por WhatsApp</a>
+            <p class="fine center">El envío se cotiza aparte según tu ciudad.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Catálogo</p>
+          <h2>Ideas para regalar.</h2>
+          <p class="sub">Todo se personaliza. ¿Tienes otra idea? <a class="wa-link link" data-wa-msg="Hola Tinker, tengo una idea personalizada: " href="#" rel="noopener noreferrer" target="_blank">Cuéntanosla</a>.</p>
+        </header>
+        <ul class="grid" id="catalog"></ul>
+      </div>
+    </section>
+
+    <section id="como-pedir" class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Cómo pedir</p>
+          <h2>Tres pasos. Cero complicaciones.</h2>
+        </header>
+        <ol class="steps">
+          <li class="glass">
+            <span class="step-n">01</span>
+            <h3>Cuéntanos la idea</h3>
+            <p>Usa el configurador o escríbenos con el nombre, los colores o una foto de referencia.</p>
+          </li>
+          <li class="glass">
+            <span class="step-n">02</span>
+            <h3>Aprueba el diseño</h3>
+            <p>Te enviamos una vista previa y el precio final. Con el anticipo, empezamos a imprimir.</p>
+          </li>
+          <li class="glass">
+            <span class="step-n">03</span>
+            <h3>Recíbelo</h3>
+            <p>Entrega en Barranquilla o envío a cualquier ciudad, empacado y listo para regalar.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="wrap narrow">
+        <header class="section-head">
+          <p class="eyebrow">Preguntas</p>
+          <h2>Lo que más nos preguntan.</h2>
+        </header>
+        <div class="faq glass">
+          <details>
+            <summary>¿Cuánto se demora mi pedido?</summary>
+            <p>La mayoría de piezas están listas en 2 a 4 días hábiles después de aprobar el diseño. Pedidos grandes o diseños nuevos pueden tardar más; te confirmamos la fecha antes de empezar.</p>
+          </details>
+          <details>
+            <summary>¿Hacen envíos fuera de Barranquilla?</summary>
+            <p>Sí, a toda Colombia. El costo depende de la ciudad y te lo confirmamos por WhatsApp junto con el precio del producto.</p>
+          </details>
+          <details>
+            <summary>¿Cómo pago?</summary>
+            <p>Al pedir por WhatsApp te enviamos los medios de pago disponibles. Para pedidos personalizados pedimos un anticipo antes de imprimir. Nunca te pediremos datos de tarjeta por chat.</p>
+          </details>
+          <details>
+            <summary>¿Puedo pedir un diseño que no está en el catálogo?</summary>
+            <p>Claro. Mándanos la idea, una foto o un boceto y te cotizamos. No reproducimos logos ni personajes de otras marcas sin autorización.</p>
+          </details>
+          <details>
+            <summary>¿De qué material son las piezas?</summary>
+            <p>PLA, un plástico de origen vegetal, resistente para el uso diario. No es apto para el lavaplatos ni para el calor directo, como dentro de un carro al sol.</p>
+          </details>
+          <details>
+            <summary>¿Hacen pedidos para empresas o eventos?</summary>
+            <p>Sí: llaveros con logo, regalos de fin de año y recordatorios para bodas y cumpleaños. Escríbenos con la cantidad y la fecha.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="cta glass">
+          <h2>¿Tienes una idea?<br>La imprimimos<span class="accent">_</span></h2>
+          <a class="btn btn-primary wa-link" data-wa-msg="Hola Tinker, quiero cotizar una idea." href="#" rel="noopener noreferrer" target="_blank">Cotiza por WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <img src="/assets/logo.svg" alt="tinker" width="80" height="22">
+      <p class="fine">Hecho capa por capa en Barranquilla · Envíos a toda Colombia</p>
+      <a class="fine link" id="ig-link" href="https://www.instagram.com/heytinker.co/" rel="noopener noreferrer" target="_blank">@heytinker.co</a>
+    </div>
+  </footer>
+</body>
+</html>
