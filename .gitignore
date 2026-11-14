@@ -3,3 +3,4 @@ node_modules/
 .vercel/
 .env*
 s_*.png
+tools/.build/
