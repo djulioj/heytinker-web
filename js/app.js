@@ -114,6 +114,19 @@
     list.appendChild(li);
   });
 
+  // ---------- Bottom tab bar: highlight the section in view ----------
+
+  var tabs = document.querySelectorAll(".tabbar a");
+  if (tabs.length && "IntersectionObserver" in window) {
+    var tabIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        tabs.forEach(function (t) { t.setAttribute("aria-current", String(t.getAttribute("data-tab") === e.target.id)); });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["configura", "catalogo", "club", "faq"].forEach(function (id) { var n = $(id); if (n) tabIo.observe(n); });
+  }
+
   // ---------- Scroll reveal (subtle, Apple-like) ----------
 
   var revealables = document.querySelectorAll(".reveal");
