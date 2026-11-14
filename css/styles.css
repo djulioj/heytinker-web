@@ -253,3 +253,48 @@ input:focus { outline: none; border-color: rgba(255, 255, 255, 0.5); box-shadow:
   .drop { animation: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
+
+/* ---------- 3D studio ---------- */
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.stage {
+  position: relative; aspect-ratio: 4 / 3; border-radius: calc(var(--r-lg) - 8px); overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 20%, #26262A 0%, #121214 60%, #0B0B0C 100%);
+  touch-action: none; transition: background .6s var(--ease);
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage.is-lit { background: radial-gradient(90% 80% at 50% 45%, #2a2016 0%, #0d0b09 70%, #050505 100%); }
+.stage-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--text-3); font-size: 14px; }
+.stage-tools { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 2; }
+.tool {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; min-width: 40px; padding: 0 12px; justify-content: center;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.16); color: var(--bone); font-size: 13px; font-weight: 600; cursor: pointer;
+  background: rgba(20, 20, 22, 0.5); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.tool[aria-pressed="true"] { background: rgba(255, 214, 168, 0.18); border-color: rgba(255, 214, 168, 0.5); color: #FFE2C2; }
+.stage-hint { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-size: 12px; color: var(--text-3); pointer-events: none; }
+
+.dropzone {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 22px 16px; margin: 0;
+  border-radius: var(--r-md); border: 1.5px dashed rgba(255, 255, 255, 0.18); background: rgba(0, 0, 0, 0.25);
+  text-align: center; cursor: pointer; font-weight: 600; font-size: 15px; transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.dropzone:hover { border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.04); }
+.dropzone .fine { font-weight: 400; }
+#cfg-file:focus-visible + .warn, .dropzone:focus-within { outline: 2px solid var(--bone); outline-offset: 3px; }
+
+/* ---------- Motion: hero intro and scroll reveals ---------- */
+@keyframes rise { from { opacity: 0; transform: translate3d(0, 18px, 0); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.hero-inner > * { animation: rise .9s var(--ease) both; }
+.hero-inner > *:nth-child(2) { animation-delay: .08s; }
+.hero-inner > *:nth-child(3) { animation-delay: .16s; }
+.hero-inner > *:nth-child(4) { animation-delay: .24s; }
+.hero-inner > *:nth-child(5) { animation-delay: .32s; }
+.js-reveal .reveal { opacity: 0; transform: translate3d(0, 28px, 0) scale(0.985); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.js-reveal .reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-inner > * { animation: none; }
+}

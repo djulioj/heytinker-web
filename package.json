@@ -1,0 +1,12 @@
+{
+  "name": "heytinker-web",
+  "private": true,
+  "description": "Tinker website. The site is static; npm is only used to bundle the 3D studio.",
+  "scripts": {
+    "bundle": "esbuild src/studio.js --bundle --format=esm --minify --target=es2020 --outfile=js/studio.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "three": "^0.187.0"
+  }
+}
