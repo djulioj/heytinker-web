@@ -1,7 +1,7 @@
 // Business settings and catalog data. Edit this file to change prices, products, contact info or the season.
 window.TINKER = {
   // WhatsApp Business number in international format, digits only (57 + 10-digit mobile).
-  whatsapp: "57XXXXXXXXXX",
+  whatsapp: "573239085769",
   instagram: "heytinker.co",
 
   // Seasonal decoration: "navidad" or "" (none). Add new seasons in css/season.css.
