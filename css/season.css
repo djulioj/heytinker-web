@@ -3,7 +3,7 @@
 
 [data-season="navidad"] .brand { position: relative; display: inline-block; }
 [data-season="navidad"] .season-hat {
-  display: block; position: absolute; left: -9px; top: -12px; width: 24px; height: 21px;
+  display: block; position: absolute; left: -9px; top: -3px; width: 24px; height: 21px;
   background: url("/assets/season/santa-hat.svg") center / contain no-repeat;
   transform: rotate(-18deg); pointer-events: none;
 }
