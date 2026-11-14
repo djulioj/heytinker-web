@@ -44,6 +44,8 @@
   });
 
   // ---------- 3D studio: load only when it is about to be seen ----------
+  // The margin is small on purpose: on phones the studio sits just below the first screen, and
+  // loading three.js during the initial paint would compete with the hero.
 
   var studioLoaded = false;
   function loadStudio() {
@@ -54,11 +56,11 @@
     s.src = "/js/studio.min.js";
     document.body.appendChild(s);
   }
-  var studio = $("configura");
+  var studio = document.querySelector("#configura .config");
   if (studio && "IntersectionObserver" in window) {
     new IntersectionObserver(function (entries, obs) {
       if (entries[0].isIntersecting) { loadStudio(); obs.disconnect(); }
-    }, { rootMargin: "600px 0px" }).observe(studio);
+    }, { rootMargin: "120px 0px" }).observe(studio);
   } else {
     loadStudio();
   }
@@ -84,9 +86,18 @@
     var li = el("li");
     var card = el("article", { class: "card glass" });
 
+    // Real photo when there is one; otherwise our own 3D render, labeled as a reference design.
     var visual = el("div", { class: "card-visual" });
-    visual.appendChild(cubeIcon());
+    var src = item.photo || (item.id ? "/assets/catalog/" + item.id + ".webp" : "");
+    if (src) {
+      var img = el("img", { src: src, alt: item.isConcept ? item.name + ", diseño de referencia" : item.name, width: "800", height: "600", loading: "lazy", decoding: "async" });
+      img.addEventListener("error", function () { img.replaceWith(cubeIcon()); });
+      visual.appendChild(img);
+    } else {
+      visual.appendChild(cubeIcon());
+    }
     if (item.tag) visual.appendChild(el("span", { class: "tag" }, item.tag));
+    if (item.isConcept) visual.appendChild(el("span", { class: "concept" }, "Diseño de referencia"));
 
     var body = el("div", { class: "card-body" });
     body.appendChild(el("h3", null, item.name));
@@ -125,6 +136,38 @@
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
     ["configura", "catalogo", "club", "faq"].forEach(function (id) { var n = $(id); if (n) tabIo.observe(n); });
+  }
+
+  // ---------- "Cómo pedir": a pinned scene driven by scroll ----------
+  // The piece prints from the bottom up, then lands in its gift box. Without motion (or without JS)
+  // the section is a plain three-step list.
+
+  var story = $("como-pedir");
+  if (story && !reduceMotion && "IntersectionObserver" in window && window.CSS && CSS.supports("position", "sticky")) {
+    document.documentElement.classList.add("js-story");
+    var steps = story.querySelectorAll(".story-steps li");
+    var ticking = false, storyActive = false;
+    var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var updateStory = function () {
+      ticking = false;
+      var rect = story.getBoundingClientRect();
+      var span = rect.height - window.innerHeight;
+      var p = span > 0 ? clamp01(-rect.top / span) : 0;
+      var print = clamp01((p - 0.1) / 0.5);
+      var boxed = clamp01((p - 0.7) / 0.14);
+      var step = p < 0.3 ? 0 : p < 0.68 ? 1 : 2;
+      story.style.setProperty("--print", print.toFixed(4));
+      story.style.setProperty("--boxed", boxed.toFixed(4));
+      story.style.setProperty("--nozzle", print > 0.01 && print < 0.99 ? "1" : "0");
+      for (var i = 0; i < steps.length; i++) steps[i].classList.toggle("is-active", i === step);
+    };
+    var onStoryScroll = function () {
+      if (storyActive && !ticking) { ticking = true; window.requestAnimationFrame(updateStory); }
+    };
+    new IntersectionObserver(function (entries) { storyActive = entries[0].isIntersecting; if (storyActive) updateStory(); }).observe(story);
+    window.addEventListener("scroll", onStoryScroll, { passive: true });
+    window.addEventListener("resize", onStoryScroll, { passive: true });
+    updateStory();
   }
 
   // ---------- Scroll reveal (subtle, Apple-like) ----------

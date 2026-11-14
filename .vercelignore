@@ -1,0 +1,8 @@
+# Not part of the public site: sources, build tools and internal notes.
+src
+tools
+docs
+node_modules
+package.json
+package-lock.json
+README.md
