@@ -1,9 +1,10 @@
 {
   "name": "heytinker-web",
   "private": true,
-  "description": "Tinker website. The site is static; npm is only used to bundle the 3D studio.",
+  "description": "Tinker website. The site is static; npm is only used to bundle the 3D studio and to render catalog images.",
   "scripts": {
-    "bundle": "esbuild src/studio.js --bundle --format=esm --minify --target=es2020 --outfile=js/studio.min.js"
+    "bundle": "esbuild src/studio.js --bundle --format=esm --minify --target=es2020 --outfile=js/studio.min.js",
+    "render": "esbuild tools/render-entry.js --bundle --format=esm --target=es2020 --outfile=tools/.build/render.js --log-level=error && python3 tools/render_catalog.py"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
